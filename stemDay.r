@@ -120,3 +120,65 @@ for(D in c(TRUE,FALSE))
 
 openxlsx::write.xlsx(results,'stemDay.xlsx')
 
+
+### number in stem field
+
+### estimate proportion
+wmean <- function(x,w)
+    sum(x*w)/sum(w)
+
+estProp <- function(x,w,wrep){
+    est <- wmean(x,w)
+    reps <- apply(wrep,2,function(ww) wmean(x,ww))
+    c(est,sqrt(4*mean((reps-est)^2)))
+}
+
+estNum <- function(ddd){
+    est <- sum(ddd$pwgtp)
+    wrep <- ddd[,paste0('pwgtp',1:80)]
+    c(est,sqrt(4*mean((colSums(wrep)-est)^2)))
+}
+
+numProp <- function(DEAF){
+    ddd <- filter(sdat,dear==ifelse(DEAF,1,2))
+    wrep <- ddd[,paste0('pwgtp',1:80)]
+    w <- ddd$pwgtp
+
+    overall <- prettyNum(c(100,0,round(estNum(ddd)),nrow(ddd)),',')
+
+    estfun <- function(sss){
+        sss <- enquo(sss)
+        ddd <- ddd%>%mutate(x=!! sss)
+        prop <- estProp(ddd$x,w,wrep)*100
+        num <- estNum(filter(ddd,!! sss))
+
+        prettyNum(c(round(prop,1),round(num),nrow(ddd)),',')
+    }
+
+    out <- overall
+    subs <- c('','')
+    for(job in levels(sdat$stemJob)){
+        subs <- rbind(subs,c(job,''))
+        out <- rbind(out,estfun(stemJob==job))
+    }
+    for(bach in levels(sdat$BA)){
+        subs <- rbind(subs,c('',bach))
+        out <- rbind(out,estfun(BA==bach))
+    }
+    for(job in levels(sdat$stemJob))
+        for(bach in levels(sdat$BA)){
+            subs <- rbind(subs,c(job,bach))
+            out <- rbind(out,
+                         estfun(stemJob==job & BA==bach))
+        }
+
+    out <- data.frame(subs,out)
+    names(out) <- c('job','Bachelors',paste(ifelse(DEAF,'Deaf','Hearing'),c('Percentage','SE.p','Number','SE.tot','n')))
+    out
+}
+
+numprop <- list()
+for(D in c(TRUE,FALSE))
+    numprop[[paste(ifelse(D,'Deaf','Hearing'))]] <- numProp(D)
+
+openxlsx::write.xlsx(numprop,'proportionStem.xlsx')
