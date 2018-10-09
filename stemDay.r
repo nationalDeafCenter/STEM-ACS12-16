@@ -23,11 +23,11 @@ ccc <- ifelse(names(firstTry)%in%pVars,
               ifelse(names(firstTry)=='OCCP','c','i'),'-')
 ccc <- paste(ccc,collapse='')
 
-sdat <- read_csv('../data/acs5yr2016/ss16pusa.csv',col_types=ccc)
+sdat <- read_csv('../data/acs5yr2016/ss16pusa.csv',col_types=ccc) ### CHANGE TO APPROPRIATE LOCATION
 
 
 for(pp in c('b','c','d')){
-    sdat2 <- read_csv(paste0('../data/acs5yr2016/ss16pus',pp,'.csv'),col_types=ccc)
+    sdat2 <- read_csv(paste0('../data/acs5yr2016/ss16pus',pp,'.csv'),col_types=ccc) ## CHANGE TO APPROPRIATE LOCATION
     sdat <- rbind(sdat[,pVars],sdat2[,pVars])
 }
 
