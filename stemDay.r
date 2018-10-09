@@ -8,7 +8,7 @@ library(survey)
 ## load in data: 5-year ACS
 
 
-states <- read.csv('../data/acs5yr2016/states.csv')
+states <- read.csv('states.csv')
 stemCodes <- read.csv('stemCodes.csv',colClasses = "character")
 stemRelatedCodes <- read.csv('stemRelatedCodes.csv',colClasses = "character")
 
