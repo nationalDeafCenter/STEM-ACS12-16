@@ -1,3 +1,7 @@
+#### copied and modified from svyquantile() function in R survey package
+#### options: method='linear', ci='probability'
+#### works better with large data (e.g. don't need "design" object)
+
 med <- function(x,dat){
     x <-model.frame(x,dat)[[1]]
     oo <- order(x)
