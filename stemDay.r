@@ -8,7 +8,7 @@ library(survey)
 ## load in data: 5-year ACS
 
 
-states <- read.csv('../data/acs5yr2016/states.csv')
+states <- read.csv('states.csv')
 stemCodes <- read.csv('stemCodes.csv',colClasses = "character")
 stemRelatedCodes <- read.csv('stemRelatedCodes.csv',colClasses = "character")
 
@@ -23,11 +23,11 @@ ccc <- ifelse(names(firstTry)%in%pVars,
               ifelse(names(firstTry)=='OCCP','c','i'),'-')
 ccc <- paste(ccc,collapse='')
 
-sdat <- read_csv('../data/acs5yr2016/ss16pusa.csv',col_types=ccc)
+sdat <- read_csv('../data/acs5yr2016/ss16pusa.csv',col_types=ccc) ### CHANGE TO APPROPRIATE LOCATION
 
 
 for(pp in c('b','c','d')){
-    sdat2 <- read_csv(paste0('../data/acs5yr2016/ss16pus',pp,'.csv'),col_types=ccc)
+    sdat2 <- read_csv(paste0('../data/acs5yr2016/ss16pus',pp,'.csv'),col_types=ccc) ## CHANGE TO APPROPRIATE LOCATION
     sdat <- rbind(sdat[,pVars],sdat2[,pVars])
 }
 
@@ -41,7 +41,6 @@ sdat$state <- states$abb[match(sdat$ST,states$x)]
 
 sdat$stem <- sdat$occp%in%stemCodes$code
 sdat$stemrel <- sdat$occp%in%c(stemRelatedCodes$code,stemCodes$code)
-
 
 sdat$adj <- sdat$adjinc/1e6
 
