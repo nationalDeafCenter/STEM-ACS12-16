@@ -42,8 +42,6 @@ sdat$state <- states$abb[match(sdat$ST,states$x)]
 sdat$stem <- sdat$occp%in%stemCodes$code
 sdat$stemrel <- sdat$occp%in%c(stemRelatedCodes$code,stemCodes$code)
 
-sdat$stemjob <-
-
 sdat$adj <- sdat$adjinc/1e6
 
 sdat <- sdat%>%filter(agep>24,agep<65)%>%
